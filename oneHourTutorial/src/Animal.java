@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.*;
 
 public class Animal {
     public static final double FAVNUMBER = 1.6180;
-
+    protected static int numberOfAnimals = 0;
+    static Scanner userinput = new Scanner(System.in);
     private String name;
     private int weight;
     private boolean hasOwner = false;
@@ -13,17 +14,12 @@ public class Animal {
     private double speed;
     private float height;
 
-
-    protected static int numberOfAnimals = 0;
-
-    static Scanner userinput = new Scanner(System.in);
-
     public Animal() {
         ++numberOfAnimals;
 
         int sumOfNumbers = 5 + 1;
+        ArrayList<String> al;
         System.out.println("5 + 1 = " + sumOfNumbers);
-
         int divOfNumbers = 5 / 1;
         System.out.println("5 / 1 = " + divOfNumbers);
         int minusOfNumbers = 5 - 1;
@@ -35,6 +31,10 @@ public class Animal {
         if (userinput.hasNextLine()) {
             this.setName(userinput.nextLine());
         }
+    }
+
+    public static void main(String[] args) {
+        Animal theAnimal = new Animal();
     }
 
     public String getName() {
@@ -100,9 +100,6 @@ public class Animal {
     public void setHeight(float height) {
         this.height = height;
     }
-
-    public static void main(String[] args) {
-        Animal theAnimal = new Animal();
-    }
-
 }
+
+
