@@ -99,11 +99,22 @@ public class KOmment {
 
     private static ArrayList<StringPair> divide(Scanner reader) {
         ArrayList<StringPair> resultArray = new ArrayList<StringPair>();
-        String pattern = "^(.*)\\s*" + delimiter + "?(.*)$";
-        Pattern reg = Pattern.compile(pattern);
+        Pattern reg = Pattern.compile("^(.*)" + delimiter + "(.*)$");
         while (reader.hasNextLine()) {
             String line = reader.nextLine();
+            Matcher match = reg.matcher(line);
 
+            if (match.find()) {
+                System.out.println(match.group(1));
+                resultArray.add(new StringPair(
+                        match.group(1).replaceAll("\\s*$", ""),
+                        match.group(2)
+                ));
+            } else {
+                resultArray.add(new StringPair(
+                   line, ""
+                ));
+            }
         }
 
         return resultArray;
