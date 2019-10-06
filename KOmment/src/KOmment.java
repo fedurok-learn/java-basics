@@ -8,13 +8,15 @@ import java.util.regex.Pattern;
 
 public class KOmment {
     private static String delimiter = "//";
-    private static String fname;
+    private static String fname = new String();
+    private static String outputFname = new String();
     // amount of whitespaces after the longest line
     private static int columnLength = 10;
 
     public static void main(String[] args) {
         boolean expectDelimiter = false;
         boolean expectColumnLength = false;
+        boolean expectOutputFname = false;
 
         for (String arg : args) {
             switch (arg) {
@@ -33,6 +35,11 @@ public class KOmment {
                     expectColumnLength = true;
                     break;
                 }
+                case "-o":
+                case "--output": {
+                    expectOutputFname = true;
+                    break;
+                }
                 default: {
                     if (expectDelimiter) {
                         delimiter = arg;
@@ -40,6 +47,9 @@ public class KOmment {
                     } else if (expectColumnLength) {
                         columnLength = Integer.parseInt(arg);
                         expectColumnLength = false;
+                    } else if (expectOutputFname) {
+                        outputFname = arg;
+                        expectOutputFname = false;
                     } else {
                         fname = arg;
                     }
@@ -59,6 +69,7 @@ public class KOmment {
         System.out.println("KOmment -d '//' filename");
         System.out.println("Flags: ");
         System.out.println("-d or --delimiter ';;' - set comment delimiter ('//' by default)");
+        System.out.println("-o or --output outfname - set output file name(filename +'.pcom' by default)");
         System.out.println("-w or --whitespaces - set amount of whitespace to the length of the longest line " +
                 "plus this parameter");
         System.out.println("-h or --help for help");
@@ -75,17 +86,23 @@ public class KOmment {
             // opening input file
             File file = new File(fname);
             // opening output file
-            BufferedWriter outputWriter = new BufferedWriter(new FileWriter(fname + ".pcom"));
+            BufferedWriter outputWriter = new BufferedWriter(new FileWriter(
+                    outputFname.isEmpty() ? fname + ".pcom" : outputFname
+            ));
 
             // transforming
             ArrayList<StringPair> codeAndComments = divide(new Scanner(file));
             int desiredLength = longestStringLength(codeAndComments) + columnLength;
             for (StringPair pair : codeAndComments) {
-                outputWriter.write(
-                        pair.getFirst() +
-                        getWspaces(pair.getFirst().length(), desiredLength) +
-                        delimiter + pair.getSecond() + '\n'
-                );
+                String afterCode = pair.getSecond();
+                if (!afterCode.isEmpty()) {
+                    afterCode =
+                            getWspaces(pair.getFirst().length(), desiredLength) +
+                            delimiter +
+                            afterCode;
+                }
+
+                outputWriter.write(pair.getFirst() + afterCode +  '\n');
             }
 
             outputWriter.close();
@@ -105,7 +122,6 @@ public class KOmment {
             Matcher match = reg.matcher(line);
 
             if (match.find()) {
-                System.out.println(match.group(1));
                 resultArray.add(new StringPair(
                         match.group(1).replaceAll("\\s*$", ""),
                         match.group(2)
@@ -133,16 +149,8 @@ public class KOmment {
         return maxLength;
     }
 
-    private static String getComment(String line) {
-        return "hello";
-    }
-
-    private static String getCode(String line) {
-        return "world";
-    }
-
     private static void abort() {
-        System.out.println("Wrong usage of a programm, see '--help'");
+        System.out.println("Wrong usage of a program, see '--help'");
     }
 }
 
