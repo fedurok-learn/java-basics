@@ -65,15 +65,14 @@ public class KOmment {
     }
 
     private static void help() {
-        System.out.println("usage");
-        System.out.println("KOmment -d '//' filename");
+        System.out.println("Copies your file with properly aligned comments");
+        System.out.println("Usage: KOmment -d '//' filename");
         System.out.println("Flags: ");
         System.out.println("-d or --delimiter ';;' - set comment delimiter ('//' by default)");
         System.out.println("-o or --output outfname - set output file name(filename +'.pcom' by default)");
         System.out.println("-w or --whitespaces - set amount of whitespace to the length of the longest line " +
                 "plus this parameter");
         System.out.println("-h or --help for help");
-        System.out.println("program outputs file names: 'filename.pcom'");
     }
 
     private static void process() {
