@@ -66,26 +66,29 @@ public class KOmment {
         System.out.println(delimiter);
         System.out.println(fname);
         System.out.println(columnLength);
+
         try {
             // opening input file
             File file = new File(fname);
             // opening output file
-            PrintWriter outputFile = new PrintWriter(fname + ".pcom", "UTF-8");
-            // transforming
-            Scanner reader = new Scanner(file);
-            int wspaceNum = longestStringLength(reader) + columnLength;
+            BufferedWriter outputWriter = new BufferedWriter(new FileWriter(fname + ".pcom"));
 
+            // transforming
+            int wspaceNum = longestStringLength(new Scanner(file)) + columnLength;
+            Scanner reader = new Scanner(file);
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
                 String code = getCode(line);
                 String comment = getComment(line);
-                outputFile.println(
+                outputWriter.write(
                         code +
                         getWspaces(code.length(), wspaceNum) +
                         delimiter +
-                        comment
+                        comment + '\n'
                 );
             }
+
+            outputWriter.close();
         } catch (FileNotFoundException e) {
             System.out.println("There are no such file");
         }  catch (IOException e) {
