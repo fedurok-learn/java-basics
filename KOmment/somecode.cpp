@@ -1,8 +1,2 @@
-#include <iostream>
+sometext                        // jklasdf
 
-using namespace std;    // my comments
-
-int main() {
-
-  return 0;     // your comments
-}

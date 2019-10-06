@@ -1,6 +1,10 @@
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class KOmment {
     private static String delimiter = "//";
@@ -74,37 +78,46 @@ public class KOmment {
             BufferedWriter outputWriter = new BufferedWriter(new FileWriter(fname + ".pcom"));
 
             // transforming
-            int wspaceNum = longestStringLength(new Scanner(file)) + columnLength;
-            Scanner reader = new Scanner(file);
-            while (reader.hasNextLine()) {
-                String line = reader.nextLine();
-                String code = getCode(line);
-                String comment = getComment(line);
+            ArrayList<StringPair> codeAndComments = divide(new Scanner(file));
+            int desiredLength = longestStringLength(codeAndComments) + columnLength;
+            for (StringPair pair : codeAndComments) {
                 outputWriter.write(
-                        code +
-                        getWspaces(code.length(), wspaceNum) +
-                        delimiter +
-                        comment + '\n'
+                        pair.getFirst() +
+                        getWspaces(pair.getFirst().length(), desiredLength) +
+                        delimiter + pair.getSecond() + '\n'
                 );
             }
 
             outputWriter.close();
         } catch (FileNotFoundException e) {
             System.out.println("There are no such file");
-        }  catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+    }
 
+    private static ArrayList<StringPair> divide(Scanner reader) {
+        ArrayList<StringPair> resultArray = new ArrayList<StringPair>();
+        String pattern = "^(.*)\\s*" + delimiter + "?(.*)$";
+        Pattern reg = Pattern.compile(pattern);
+        while (reader.hasNextLine()) {
+            String line = reader.nextLine();
+
+        }
+
+        return resultArray;
     }
 
     private static String getWspaces(int codeLength, int desiredLength) {
         return new String(new char[desiredLength - codeLength]).replace('\0', ' ');
     }
 
-    private static int longestStringLength(Scanner reader) {
+    private static int longestStringLength(ArrayList<StringPair> codeAndComments) {
         int maxLength = 0;
-        while (reader.hasNextLine()) maxLength = Math.max(reader.nextLine().length(), maxLength);
+        for (StringPair codeComment : codeAndComments) {
+            maxLength = Math.max(codeComment.getFirst().length(), maxLength);
+        }
 
         return maxLength;
     }
@@ -119,5 +132,38 @@ public class KOmment {
 
     private static void abort() {
         System.out.println("Wrong usage of a programm, see '--help'");
+    }
+}
+
+class StringPair {
+
+    /**
+     * The first element of this <code>StringPair</code>
+     */
+    private String first;
+
+    /**
+     * The second element of this <code>StringPair</code>
+     */
+    private String second;
+
+    /**
+     * Constructs a new <code>StringPair</code> with the given values.
+     *
+     * @param first  the first element
+     * @param second the second element
+     */
+    public StringPair(String first, String second) {
+
+        this.first = first;
+        this.second = second;
+    }
+
+    public String getFirst() {
+        return first;
+    }
+
+    public String getSecond() {
+        return second;
     }
 }
