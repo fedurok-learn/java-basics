@@ -11,3 +11,4 @@ Some JetBrains IDEA useful shortcuts:
 - `Ctrl + Alt + L` - reformat
 - `Ctrl + Shift + Down/Up` - move statement down/up
 - `Ctrl + Alt + S` - settings
+- `Ctrl + B` - jump to declaration/usage of the class/method
