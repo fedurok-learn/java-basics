@@ -13,6 +13,9 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'com.amazonaws:aws-java-sdk:1.11.163'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.697'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"
+    implementation "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 }
