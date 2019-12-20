@@ -14,14 +14,18 @@ public class ResizeImage {
 
         String imgURL = args[1];
         String imgName = args[2];
+        String imgExt = args[1].substring(args[1].lastIndexOf('.') + 1);
+        if (imgExt == "jpeg") imgExt = "jpg";
+        System.out.println(imgExt);
+
         int newWidth = Integer.parseInt(args[3]);
         
         try {
             BufferedImage image = imageFromURL(imgURL);
             BufferedImage resized = resizeToWidth(image, newWidth);
 
-            File output = new File(imgName + "_scaled.png");
-            ImageIO.write(resized, "png", output);
+            File output = new File(imgName + "_scaled." + imgExt);
+            ImageIO.write(resized, imgExt, output);
 
             System.out.println("Scaling completed");
         } catch(MalformedInputException e) {
@@ -42,7 +46,7 @@ public class ResizeImage {
 
     private static BufferedImage resize(BufferedImage img, int height, int width) {
         Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = resized.createGraphics();
         g2d.drawImage(tmp, 0, 0, null);
         g2d.dispose();
