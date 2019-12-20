@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.MalformedInputException;
 
 public class ResizeImage {
 
@@ -10,18 +12,27 @@ public class ResizeImage {
         System.out.println("Start scaling");
         System.out.println("\n...\n");
 
-        String imgName = args[1];
-        int newWidth = Integer.parseInt(args[2]);
+        String imgURL = args[1];
+        String imgName = args[2];
+        int newWidth = Integer.parseInt(args[3]);
+        
+        try {
+            BufferedImage image = imageFromURL(imgURL);
+            BufferedImage resized = resizeToWidth(image, newWidth);
 
-        File input = new File(imgName);
-        BufferedImage image = ImageIO.read(input);
+            File output = new File(imgName + "_scaled.png");
+            ImageIO.write(resized, "png", output);
 
-        BufferedImage resized = resizeToWidth(image, newWidth);
+            System.out.println("Scaling completed");
+        } catch(MalformedInputException e) {
+            System.out.println("Error, URL is invalid");
+            System.exit(1);
+        }
+    }
 
-        File output = new File(imgName.substring(0, imgName.length() - 4) + "_scaled.png");
-        ImageIO.write(resized, "png", output);
-
-        System.out.println("Scaling completed");
+    private static BufferedImage imageFromURL(String urlPath) throws IOException {
+        URL url = new URL(urlPath);
+        return ImageIO.read(url);
     }
 
     private static BufferedImage resizeToWidth(BufferedImage img, int width) {
