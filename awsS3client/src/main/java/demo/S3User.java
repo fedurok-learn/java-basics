@@ -32,11 +32,11 @@ public class S3User {
         client.listFiles(BUCKET_NAME);
 
         System.out.println("\n!Uploading img.png as img.png!\n");
-        client.upload(BUCKET_NAME, "img.png", "img.png");
+        client.upload(BUCKET_NAME, new File("img.png"), "img.png");
 
         try {
             System.out.println("\n!Downloading img.png to imgDownloaded.png!\n");
-            client.download(BUCKET_NAME, "img.png", "imgDownloaded.png");
+            client.download(BUCKET_NAME, "img.png", new File("imgDownloaded.png"));
         } catch (IOException e) {
             System.out.println("\n!Something went wrong!\n");
         }
@@ -44,12 +44,12 @@ public class S3User {
         client.listFiles(BUCKET_NAME);
 
         System.out.println("\n!Uploading img.png as img1.png!\n");
-        client.upload(BUCKET_NAME, "img.png", "img1.png");
+        client.upload(BUCKET_NAME, new File("img.png"), "img1.png");
         System.out.println("\n!Listing files!\n");
         client.listFiles(BUCKET_NAME);
 
         System.out.println("\n!Uploading img.png as img2.png!\n");
-        client.upload(BUCKET_NAME, "img.png", "img2.png");
+        client.upload(BUCKET_NAME, new File("img.png")", "img2.png");
         System.out.println("\n!Listing files!\n");
         client.listFiles(BUCKET_NAME);
 
@@ -59,7 +59,7 @@ public class S3User {
         client.listFiles(BUCKET_NAME);
 
         System.out.println("\n!Deleting multiple files: img.png and img1.png!\n");
-        client.multiDelete(BUCKET_NAME, new String[]{"img.png", "img1.png"});
+        client.multiDelete(BUCKET_NAME, new ArrayList<String>(new String[]{"img.png", "img1.png"}));
         System.out.println("\n!Listing files!\n");
         client.listFiles(BUCKET_NAME);
     }
