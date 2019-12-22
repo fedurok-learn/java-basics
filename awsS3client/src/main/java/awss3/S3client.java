@@ -1,4 +1,4 @@
-package awss3;
+package profiles.utility;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -11,6 +11,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class S3client {
@@ -43,27 +44,31 @@ public class S3client {
         }
     }
 
-    public PutObjectResult upload(String bucketName, String origName, String destName) {
+    public PutObjectResult upload(String bucketName, File orig, String destName) {
         return mClient.putObject(
                 bucketName,
                 destName,
-                new File(origName)
+                orig
         );
     }
 
-    public void download(String bucketName, String origin, String dest) throws IOException {
+    public File download(String bucketName, String origin) throws IOException {
         S3Object s3object = mClient.getObject(bucketName, origin);
         S3ObjectInputStream inputStream = s3object.getObjectContent();
-        FileUtils.copyInputStreamToFile(inputStream, new File(dest));
+
+        File file = File.createTempFile("aws", "s3");
+        FileUtils.copyInputStreamToFile(inputStream, file);
+
+        return file;
     }
 
     public void delete(String bucketName, String path) {
         mClient.deleteObject(bucketName, path);
     }
 
-    public void multiDelete(String bucketName, String[] pathes) {
+    public void multiDelete(String bucketName, ArrayList<String> pathes) {
         DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(bucketName)
-                .withKeys(pathes);
+                .withKeys(pathes.toArray(new String[]{}));
         mClient.deleteObjects(delObjReq);
     }
 }
